@@ -1,0 +1,9 @@
+[package]
+name = "lazy-panic"
+version = "0.1.0"
+authors = ["Douman <douman@gmx.se>"]
+description = "Lazy utils to customize panic messages"
+repository = "https://github.com/DoumanAsh/lazy-panic.rs"
+license = "MIT"
+
+[dependencies]
