@@ -15,7 +15,22 @@
 ///# Usage
 ///
 ///```
-///format_payload!(payload, String, &'static str)
+///#[macro_use]
+///extern crate lazy_panic;
+///
+///fn main() {
+///    std::panic::set_hook(Box::new(|info| {
+///        let payload = info.payload();
+///
+///        let msg = format!("{}{}",
+///                          info.location()
+///                              .map(|loc| format!("{}:{} - ", loc.file(), loc.line()))
+///                              .unwrap_or("".to_string()),
+///                          format_payload!(payload, String, &'static str));
+///
+///        println!("Fatal error: {}", msg);
+///     }));
+///}
 ///```
 #[macro_export]
 macro_rules! format_payload {
@@ -29,4 +44,47 @@ macro_rules! format_payload {
              format!("{:?}", $payload)
          }
     }};
+}
+
+///Sets custom printer for panic.
+///
+///# Arguments
+///
+///* ```payload_types``` - Types of used messages in panics.
+///* ```suffix``` - Part of trace appended to panic message.
+///* ```prefix``` - Part of trace pre-pended to panic message.
+///
+///# Format
+///
+///`{prefix}{message}{suffix}`
+///where:
+///
+///- message is `{file}:{line} -`
+#[macro_export]
+macro_rules! set_panic_message {
+    (payload_types=>$($p_type:ty),+) => {{
+        set_panic_hook!(prefix=>"", suffix=>"", payload_types=>$($p_type),+)
+    }};
+    (suffix=>$suffix:expr, payload_types=>$($p_type:ty),+) => {{
+        set_panic_hook!(prefix=>"", suffix=>$suffix, payload_types=>$($p_type),+)
+    }};
+    (prefix=>$prefix:expr, payload_types=>$($p_type:ty),+) => {{
+        set_panic_hook!(prefix=>$prefix, suffix=>"", payload_types=>$($p_type),+)
+    }};
+    (suffix=>$suffix:expr, prefix=>$prefix:expr, payload_types=>$($p_type:ty),+) => {{
+        set_panic_hook!(prefix=>$prefix, suffix=>$suffix, payload_types=>$($p_type),+)
+    }};
+    (prefix=>$prefix:expr, suffix=>$suffix:expr, payload_types=>$($p_type:ty),+) => {{
+        std::panic::set_hook(Box::new(|info| {
+            let payload = info.payload();
+
+            let msg = format!("{}{}",
+                              info.location()
+                                  .map(|loc| format!("{}:{} - ", loc.file(), loc.line()))
+                                  .unwrap_or("".to_string()),
+                              format_payload!(payload, $($p_type),+));
+
+            println!("{}{}{}", $prefix, msg, $suffix);
+        }))
+    }}
 }
