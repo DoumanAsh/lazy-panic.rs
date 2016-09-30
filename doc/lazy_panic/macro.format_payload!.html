@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `format_payload!` macro in crate `lazy_panic`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, format_payload!">
+
+    <title>lazy_panic::format_payload! - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>lazy_panic</a></p><script>window.sidebarCurrent = {name: 'format_payload!', ty: 'macro', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content macro">
+<h1 class='fqn'><span class='in-band'><a href='index.html'>lazy_panic</a>::<wbr><a class='macro' href=''>format_payload!</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-4' class='srclink' href='../src/lazy_panic/src/lib.rs.html#36-47' title='goto source code'>[src]</a></span></h1>
+<pre class='rust macro'>
+<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>format_payload</span> {
+    (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>payload</span>:<span class='ident'>expr</span>, $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>p_type</span>:<span class='ident'>ty</span>),<span class='op'>+</span>) <span class='op'>=&gt;</span> { ... };
+}</pre>
+<div class='docblock'><p>Formats <code>PanicInfo</code> payload into <code>String</code></p>
+
+<h1 id='arguments' class='section-header'><a href='#arguments'>Arguments</a></h1>
+<ul>
+<li><code>payload</code> - <code>PanicInfo</code> payload message.</li>
+<li><code>p_type</code> - Multiple number of types which payload can be. If not among these types then it
+is formatted as <code>{:?}</code></li>
+</ul>
+
+<h1 id='return' class='section-header'><a href='#return'>Return</a></h1>
+<p><code>String</code>. For not specified types it is <code>Any</code></p>
+
+<h1 id='usage' class='section-header'><a href='#usage'>Usage</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>lazy_panic</span>;
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='ident'>std</span>::<span class='ident'>panic</span>::<span class='ident'>set_hook</span>(<span class='ident'>Box</span>::<span class='ident'>new</span>(<span class='op'>|</span><span class='ident'>info</span><span class='op'>|</span> {
+        <span class='kw'>let</span> <span class='ident'>payload</span> <span class='op'>=</span> <span class='ident'>info</span>.<span class='ident'>payload</span>();
+
+        <span class='kw'>let</span> <span class='ident'>msg</span> <span class='op'>=</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}{}&quot;</span>,
+                          <span class='ident'>info</span>.<span class='ident'>location</span>()
+                              .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>loc</span><span class='op'>|</span> <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}:{} - &quot;</span>, <span class='ident'>loc</span>.<span class='ident'>file</span>(), <span class='ident'>loc</span>.<span class='ident'>line</span>()))
+                              .<span class='ident'>unwrap_or</span>(<span class='string'>&quot;&quot;</span>.<span class='ident'>to_string</span>()),
+                          <span class='macro'>format_payload</span><span class='macro'>!</span>(<span class='ident'>payload</span>, <span class='ident'>String</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>));
+
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Fatal error: {}&quot;</span>, <span class='ident'>msg</span>);
+     }));
+}</pre>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "lazy_panic";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
