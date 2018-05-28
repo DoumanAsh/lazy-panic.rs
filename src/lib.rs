@@ -10,40 +10,19 @@
 ///
 ///# Return
 ///
-///```String```. For not specified types it is `Any`
-///
-///# Usage
-///
-///```
-///#[macro_use]
-///extern crate lazy_panic;
-///
-///fn main() {
-///    std::panic::set_hook(Box::new(|info| {
-///        let payload = info.payload();
-///
-///        let msg = format!("{}{}",
-///                          info.location()
-///                              .map(|loc| format!("{}:{} - ", loc.file(), loc.line()))
-///                              .unwrap_or("".to_string()),
-///                          format_payload!(payload, String, &'static str));
-///
-///        println!("Fatal error: {}", msg);
-///     }));
-///}
-///```
+///Result of `write!` macro
 #[macro_export]
-macro_rules! format_payload {
-    ($payload:expr, $($p_type:ty),+) => {{
+macro_rules! write_payload {
+    ($writer:expr, $payload:expr, types: [$($p_type:ty),+]) => {{
         $(
             if let Some(result) = $payload.downcast_ref::<$p_type>() {
-                format!("{}", result)
+                write!($writer, "{}", result)
             }
          )else+
          else {
-             format!("{:?}", $payload)
+             write!($writer, "{:?}", $payload)
          }
-    }};
+    }}
 }
 
 ///Sets custom printer for panic.
@@ -62,29 +41,13 @@ macro_rules! format_payload {
 ///- message is `{file}:{line} -`
 #[macro_export]
 macro_rules! set_panic_message {
-    (payload_types=>$($p_type:ty),+) => {{
-        set_panic_hook!(prefix=>"", suffix=>"", payload_types=>$($p_type),+)
-    }};
-    (suffix=>$suffix:expr, payload_types=>$($p_type:ty),+) => {{
-        set_panic_hook!(prefix=>"", suffix=>$suffix, payload_types=>$($p_type),+)
-    }};
-    (prefix=>$prefix:expr, payload_types=>$($p_type:ty),+) => {{
-        set_panic_hook!(prefix=>$prefix, suffix=>"", payload_types=>$($p_type),+)
-    }};
-    (suffix=>$suffix:expr, prefix=>$prefix:expr, payload_types=>$($p_type:ty),+) => {{
-        set_panic_hook!(prefix=>$prefix, suffix=>$suffix, payload_types=>$($p_type),+)
-    }};
-    (prefix=>$prefix:expr, suffix=>$suffix:expr, payload_types=>$($p_type:ty),+) => {{
-        std::panic::set_hook(Box::new(|info| {
-            let payload = info.payload();
-
-            let msg = format!("{}{}",
-                              info.location()
-                                  .map(|loc| format!("{}:{} - ", loc.file(), loc.line()))
-                                  .unwrap_or("".to_string()),
-                              format_payload!(payload, $($p_type),+));
-
-            println!("{}{}{}", $prefix, msg, $suffix);
+    ($config:ty) => {{
+        use std::panic;
+        type Printer = $config;
+        panic::set_hook(Box::new(move |info| {
+            Printer::print(&info);
         }))
     }}
 }
+
+pub mod formatter;
