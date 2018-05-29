@@ -6,6 +6,7 @@ description = "Lazy utils to customize panic messages"
 repository = "https://github.com/DoumanAsh/lazy-panic.rs"
 documentation = "https://docs.rs/crate/lazy-panic"
 license = "MIT"
+readme = "README.md"
 
 [dependencies]
 
