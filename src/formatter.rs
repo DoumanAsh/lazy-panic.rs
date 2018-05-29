@@ -240,12 +240,36 @@ impl PanicFormat for Debug {
         let stderr = io::stderr();
         io::BufWriter::new(stderr)
     }
+}
 
+///Treats panic as just error
+///
+///Only panic's payload gets printed to stderr
+pub struct JustError;
+
+impl PanicInfo for JustError {
+    #[inline]
+    fn write_in<W: io::Write>(writer: &mut W, info: &panic::PanicInfo) -> io::Result<()> {
+        write_payload!(writer, info.payload(), types: [&str, String])
+    }
+}
+
+impl PanicFormat for JustError {
+    type Writer = io::BufWriter<io::Stderr>;
+    type Prefix = Empty;
+    type PanicInfo = Self;
+    type Suffix = Simple;
+    type Backtrace = Empty;
+
+    fn writer() -> Self::Writer {
+        let stderr = io::stderr();
+        io::BufWriter::new(stderr)
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{Simple, Empty, PanicFormat, Debug};
+    use super::{Simple, Empty, Debug, JustError};
 
     #[test]
     #[should_panic]
@@ -265,6 +289,13 @@ mod tests {
     #[should_panic]
     fn should_debug_panic() {
         set_panic_message!(Debug);
+        panic!("lolka");
+    }
+
+    #[test]
+    #[should_panic]
+    fn should_just_error_panic() {
+        set_panic_message!(JustError);
         panic!("lolka");
     }
 

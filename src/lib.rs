@@ -34,6 +34,7 @@ macro_rules! write_payload {
 macro_rules! set_panic_message {
     ($config:ty) => {{
         use std::panic;
+        use $crate::formatter::PanicFormat;
         type Printer = $config;
         panic::set_hook(Box::new(move |info| {
             Printer::print(&info);
