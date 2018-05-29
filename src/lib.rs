@@ -29,16 +29,7 @@ macro_rules! write_payload {
 ///
 ///# Arguments
 ///
-///* ```payload_types``` - Types of used messages in panics.
-///* ```suffix``` - Part of trace appended to panic message.
-///* ```prefix``` - Part of trace pre-pended to panic message.
-///
-///# Format
-///
-///`{prefix}{message}{suffix}`
-///where:
-///
-///- message is `{file}:{line} -`
+///* ```Config``` - panic formatter that implements [PanicFormat](formatter/trait.PanicFormat.html)
 #[macro_export]
 macro_rules! set_panic_message {
     ($config:ty) => {{
