@@ -23,9 +23,9 @@ fn main() {
     set_panic_message!(lazy_panic::formatter::Simple);
 
     //prints `Panic: main.rs:8 - LOLKA\n`
-    painic!("LOLKA");
+    panic!("LOLKA");
 
     set_panic_message!(lazy_panic::formatter::Debug);
     //prints `{Backtrace}\nPanic: main.rs:12 - LOLKA\n`
-    painic!("LOLKA");
+    panic!("LOLKA");
 }
