@@ -159,6 +159,9 @@ impl PanicFormat for Empty {
     fn writer() -> Self::Writer {
         io::stderr()
     }
+
+    fn print(_: &panic::PanicInfo) {
+    }
 }
 
 
