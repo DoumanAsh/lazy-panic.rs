@@ -7,6 +7,10 @@ lazy-panic.rs
 
 Provides lazy utilities to lazily set custom panic hook
 
+## Available features
+
+- `backtrace-on` - Enables `Debug` formatter to print backtrace
+
 ## Example
 
 Setup simple panic message
