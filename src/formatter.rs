@@ -190,7 +190,7 @@ impl Backtrace for Debug {
         //In middle 3 are from lazy_panic
         //Last 2 are from Rust runtime
         const TRASH_FRAMES_NUM: usize = 8;
-        const HEX_WIDTH: usize = mem::size_of::<usize>() * 2 + 2;
+        const HEX_WIDTH: usize = mem::size_of::<usize>() + 2;
 
         let backtrace = self::backtrace::Backtrace::new();
         //By default backtrace includes last function call
